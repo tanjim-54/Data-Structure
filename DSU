@@ -1,0 +1,27 @@
+ll par[mx+5]; // make everyone parent of itself
+ll siz[mx+5]; // size of every component is 1
+
+ll findParent(ll n) //o(logN)
+{
+    if(par[n]==n) return n;
+    return par[n]=findParent(par[n]);
+}
+
+void _union(ll n1, ll n2) //o(logN)
+{
+    n1=findParent(n1);
+    n2=findParent(n2);
+
+    if(n1==n2) return;
+
+    if(siz[n1]<siz[n2])
+    {
+        par[n1]=n2;
+        siz[n2]+=siz[n1];
+    }
+    else
+    {
+        par[n2]=n1;
+        siz[n1]+=siz[n2];
+    }
+}

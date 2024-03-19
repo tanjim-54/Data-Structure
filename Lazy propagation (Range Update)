@@ -1,0 +1,77 @@
+ll a[100005], seg[4 * 100005], lazy[4 * 100005];
+
+void build(ll lo, ll hi, ll ind)
+{
+    if(lo==hi)
+    {
+        seg[ind]=a[lo];
+        return;
+    }
+
+    ll mid=(lo+hi)/2;
+    build(lo, mid, 2*ind+1);
+    build(mid+1, hi, 2*ind+2);
+  seg[ind]=min(seg[2*ind+1],seg[2*ind+2]);
+}
+
+void update(ll lo, ll hi, ll ind, ll lr, ll rr, ll val)
+{
+    if(lazy[ind]!=0)
+    {
+        seg[ind]+=lazy[ind];
+
+        if(lo!=hi)
+        {
+            lazy[2*ind+1]+=lazy[ind];
+            lazy[2*ind+2]+=lazy[ind];
+        }
+
+        lazy[ind]=0;
+    }
+
+    if(hi<lr || lo>rr) return;
+
+    if(lo>=lr && hi<=rr)
+    {
+        seg[ind]+=val;
+
+        if(lo!=hi)
+        {
+            lazy[2*ind+1]+=val;
+            lazy[2*ind+2]+=val;
+        }
+
+        return;
+    }
+
+    ll mid=(lo+hi)/2;
+    update(lo, mid, 2*ind+1, lr, rr, val);
+    update(mid+1, hi, 2*ind+2, lr, rr, val);
+    seg[ind]=min(seg[2*ind+1],seg[2*ind+2]);
+}
+
+ll query(ll lo, ll hi, ll ind, ll lq, ll rq)
+{
+    if(lazy[ind]!=0)
+    {
+        seg[ind]+=lazy[ind];
+
+        if(lo!=hi)
+        {
+            lazy[2*ind+1]+=lazy[ind];
+            lazy[2*ind+2]+=lazy[ind];
+        }
+
+        lazy[ind]=0;
+    }
+
+    if(hi<lq || lo>rq) return INT_MAX;
+
+    if(lo>=lq && hi<=rq) return seg[ind];
+
+    ll mid=(lo+hi)/2;
+    ll left_child=query(lo, mid, 2*ind+1, lq, rq);
+    ll right_child=query(mid+1, hi, 2*ind+2, lq, rq);
+
+    return min(left_child, right_child);
+}

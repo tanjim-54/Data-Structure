@@ -1,0 +1,50 @@
+// 0 based
+// Build time : o(4 n)
+// Update time : o(log n)
+// Query time : o(log n)
+// Remember to recalculate your seg[ind] in the end of the function
+
+ll a[100005], seg[4 * 100005];
+
+void build(ll lo, ll hi, ll ind)
+{
+    if(lo==hi)
+    {
+        seg[ind]=a[lo];
+        return;
+    }
+
+    ll mid=(lo+hi)/2;
+    build(lo, mid, 2*ind+1);
+    build(mid+1, hi, 2*ind+2);
+    seg[ind]=min(seg[2*ind+1],seg[2*ind+2]);
+}
+
+void update(ll lo, ll hi, ll ind, ll point, ll val)
+{
+    if(lo==hi)
+    {
+        seg[ind]=val;
+        a[point]=val;
+        return;
+    }
+
+    ll mid=(lo+hi)/2;
+    if(point<=mid) update(lo, mid, 2*ind+1, point, val);
+    else update(mid+1, hi, 2*ind+2, point, val);
+
+    seg[ind]=min(seg[2*ind+1], seg[2*ind+2]);
+}
+
+ll query(ll lo, ll hi, ll ind, ll lq, ll rq)
+{
+    if(lq<=lo && rq>=hi) return seg[ind];
+
+    if(rq<lo || lq>hi) return INT_MAX;
+
+    ll mid=(lo+hi)/2;
+    ll left_child=query(lo, mid, 2*ind+1, lq, rq);
+    ll right_child=query(mid+1, hi, 2*ind+2, lq, rq);
+
+    return min(left_child, right_child);
+}

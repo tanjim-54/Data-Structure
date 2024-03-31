@@ -1,0 +1,40 @@
+struct node{
+  map<char,ll>mp;
+  ll len=0;
+  ll freq=0;
+};
+
+node ara[1000000];
+int main()
+{
+      ll n; cin>>n;
+      ll ptr=2;
+      ll ans=0;
+      while(n--)
+      {
+          string s; cin>>s;
+          ll cur=1;
+          
+          for(auto i:s)
+          {
+              if(ara[cur].mp.count(i))
+              {
+                  ll new_cur=ara[cur].mp[i];
+                  ara[new_cur].freq++;
+                  ara[new_cur].len=ara[cur].len+1;
+                  cur=new_cur;
+                  ans= //calculation
+
+              }
+              else
+              {
+                  ara[cur].mp[i]=ptr;
+                  ara[ptr].freq++;
+                  ara[ptr].len=ara[cur].len+1;
+                  ans= //calculation
+                  cur=ptr;
+                  ptr++;
+              }
+          }
+      }
+}
